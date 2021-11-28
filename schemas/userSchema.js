@@ -18,10 +18,11 @@ const User = new mongoose.Schema({
   },
   isActivated: {
     type: Boolean,
-    default: 'false'
+    default: true
   },
   activationLink: {
     type: String,
+    default: ""
   },
   avatarURL: {
     type: String,
