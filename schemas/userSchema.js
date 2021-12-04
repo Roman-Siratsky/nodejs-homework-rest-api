@@ -11,29 +11,25 @@ const User = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  subscription: {
-    type: String,
-    enum: ["starter", "pro", "business"],
-    default: "starter"
-  },
-  isActivated: {
-    type: Boolean,
-    default: true
-  },
-  activationLink: {
-    type: String,
-    default: ""
-  },
+  // subscription: {
+  //   type: String,
+  //   enum: ["starter", "pro", "business"],
+  //   default: "starter"
+  // },
+  // isActivated: {
+  //   type: Boolean,
+  //   default: true
+  // },
+  // activationLink: {
+  //   type: String,
+  //   default: ""
+  // },
   avatarURL: {
     type: String,
     default: function () {
       return gravatar.url(this.email, { s: '250' }, true);
     }
   },
-  // token: {
-  //   type: String,
-  //   default: null,
-  // },
 })
 
 module.exports = mongoose.model('User', User)

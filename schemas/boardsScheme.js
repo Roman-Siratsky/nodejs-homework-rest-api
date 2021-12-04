@@ -3,7 +3,7 @@ const Task = require("./taskScheme")
 
 const Board = new mongoose.Schema({
   title: { type: String, required: true},
-  tasks: { type: [Task.schema], required: true, default: [] },
+  items: { type: Array, required: true, default: [] },
 })
 
 module.exports = mongoose.model('Board', Board)

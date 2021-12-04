@@ -5,6 +5,7 @@ const http = require("./helpers/status.js")
 const contactsRouter = require('./routes/api/contacts')
 const usersRouter = require('./routes/api/users')
 const boardsRouter = require("./routes/api/boards")
+const tasksRouter = require("./routes/api/tasks")
 const cookieParser = require('cookie-parser')
 const app = express()
 
@@ -19,6 +20,7 @@ app.use(express.static('public'));
 app.use('/api/contacts', contactsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/boards', boardsRouter)
+app.use('/api/tasks', tasksRouter)
 
 app.use((req, res, next) => {
   res.status(http.NOT_FOUND).json({

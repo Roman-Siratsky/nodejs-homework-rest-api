@@ -3,9 +3,7 @@ const TokenService = require("../services/tokenService");
 
 module.exports = async function (req, res, next) {
   try {
-    // console.log(req);
     const authorizationHeader = req.headers.authorization;
-    // console.log('authorizationHeader', authorizationHeader);
     if(!authorizationHeader){
       return next({
         status: HTTP.UNAUTHORIZED,
@@ -14,7 +12,6 @@ module.exports = async function (req, res, next) {
       })
     }
     const accessToken = authorizationHeader.split(' ')[1]
-    // console.log('ACCCCEESSSS', accessToken);
     if (!accessToken) {
        return next({
         status: HTTP.UNAUTHORIZED,
@@ -24,7 +21,6 @@ module.exports = async function (req, res, next) {
     }
 
     const userData = TokenService.validateAccessToken(accessToken)
-    console.log(userData);
     if (!userData) {
       return next({
         status: HTTP.UNAUTHORIZED,

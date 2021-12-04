@@ -1,8 +1,6 @@
 const Token = require('../schemas/tokenSchema')
 const jwt = require('jsonwebtoken')
-// const JWT_ACCESS_SECRET = "jwtsecretstring"
-// const JWT_REFRESH_SECRET = 'jwtrefreshstring'
-const TOKEN_EXPIRE_IN = '30m';
+const TOKEN_EXPIRE_IN = '4h';
 const REFRESH_TOKEN_EXPIRE_IN = '30d'
 require('dotenv').config()
 
