@@ -54,7 +54,8 @@ class UserControllers {
   }
 
   getCurrentUser = async (req, res, next) => {
-    const { refreshToken } = req.cookies;
+    // const { refreshToken } = req.cookies;
+    console.log(req.headers);
     try {
       const user = await UserService.getCurrentUser(refreshToken)
       return res.status(http.OK).json({

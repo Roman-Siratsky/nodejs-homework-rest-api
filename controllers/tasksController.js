@@ -29,6 +29,13 @@ const updateTask = async (req, res, next) => {
         message: "id is not specified"
       })
     }
+    if (req.body.position) {
+      const tasks = await TaskService.getUserTasks(req.user.id)
+      tasks.forEach((task) => {
+        if (task.position >= position) task.position++
+      })
+      tasks.save()
+    }
     const updatedTask = await TaskService.update(id, req.body)
     if (!updatedTask) {
       return res.status(http.NOT_FOUND).json({
@@ -67,8 +74,22 @@ const updateTaskBoard = async (req, res, next) => {
   }
 }
 
+const deleteTask = async (req, res, next) => {
+  try {
+    const {taskId} = req.body
+    await TaskService.deleteTask(taskId)
+    return res.status(http.DELETED).json({
+      status: http.DELETED,
+      code: http.DELETED,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 module.exports = {
   addTask,
   updateTask,
   updateTaskBoard,
+  deleteTask,
 }

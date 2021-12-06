@@ -5,7 +5,8 @@ const Task = new mongoose.Schema({
   description: { type: String, required: true, default: "" },
   priority: { type: String, required: true },
   boardId: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'Board'},
-  userId: {type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'User'}
+  userId: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'User' },
+  position: {type: Number, required: true}
 })
 
 module.exports = mongoose.model('Task', Task)

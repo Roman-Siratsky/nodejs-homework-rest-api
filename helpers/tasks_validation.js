@@ -8,9 +8,10 @@ const createTaskScheme = Joi.object({
 })
 
 const updateTaskScheme = Joi.object({
-  title: Joi.string().required(),
-  description: Joi.string().required(),
-  priority: Joi.string().required(),
+  title: Joi.string(),
+  description: Joi.string(),
+  priority: Joi.string(),
+  position: Joi.number(),
 })
 
 const changeTaskBoardScheme = Joi.object({

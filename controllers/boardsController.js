@@ -9,7 +9,7 @@ const listBoards = async (req, res, next) => {
     const boardsWithTasks = boards.map(board => {
       board.items = userTasks.filter(task =>
         JSON.stringify(task.boardId) === JSON.stringify(board._id)
-      )
+      ).sort((a, b) => a.position - b.position)
       return board
     })
     return res.status(http.OK).json({

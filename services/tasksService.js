@@ -13,7 +13,7 @@ class TasksService {
     }
 
     async update(id, task) {
-        const updatedTask = await Task.findByIdAndUpdate(id, task, { new: true })
+        const updatedTask = await Task.findByIdAndUpdate(id, {...task}, { new: true })
         return updatedTask
     }
 
@@ -25,7 +25,17 @@ class TasksService {
 
     async getUserTasks(userId) {
         const userTasks = await Task.find({ userId })
-        return userTasks || []
+        return userTasks
+    }
+
+    async deleteTask(taskId) {
+        const userTasks = await Task.findByIdAndDelete(taskId)
+        return
+    }
+
+    async updatePosition(taskId, position) {
+        await Task.findByIdAndUpdate(taskId, {position}, {new: true})
+        return
     }
 }
 
