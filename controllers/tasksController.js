@@ -29,13 +29,6 @@ const updateTask = async (req, res, next) => {
         message: "id is not specified"
       })
     }
-    if (req.body.position) {
-      const tasks = await TaskService.getUserTasks(req.user.id)
-      tasks.forEach((task) => {
-        if (task.position >= position) task.position++
-      })
-      tasks.save()
-    }
     const updatedTask = await TaskService.update(id, req.body)
     if (!updatedTask) {
       return res.status(http.NOT_FOUND).json({
@@ -43,6 +36,13 @@ const updateTask = async (req, res, next) => {
         code: http.NOT_FOUND,
         message: "no task found"
       })
+    }
+    if (req.body.position) {
+      const tasks = await TaskService.getUserTasks(req.user.id)
+      const task = tasks.find(el => el._id === id)
+      tasks.splice(task.position, 1)
+      tasks.splice(position, 0, task)
+      tasks.save()
     }
     return res.status(http.UPDATED).json({
       status: http.UPDATED,
