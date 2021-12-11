@@ -13,13 +13,12 @@ class TasksService {
     }
 
     async update(id, task) {
-        const updatedTask = await Task.findByIdAndUpdate(id, {...task}, { new: true })
+        const updatedTask = await Task.findByIdAndUpdate(id, { ...task }, { new: true })
         return updatedTask
     }
 
-    async updateTaskBoard(taskId, boardId) {
-        const updatedTask = await Task.findByIdAndUpdate(taskId, {boardId}, { new: true })
-        console.log(updatedTask);
+    async updateTaskBoard(taskId, boardId, position) {
+        const updatedTask = await Task.findByIdAndUpdate(taskId, { boardId, position }, { new: true })
         return updatedTask
     }
 
@@ -28,13 +27,54 @@ class TasksService {
         return userTasks
     }
 
-    async deleteTask(taskId) {
-        const userTasks = await Task.findByIdAndDelete(taskId)
+    async getUserBoardTasks(userId, boardId) {
+        const tasks = await Task.find({ userId, boardId })
+        return tasks
+    }
+
+    async deleteTask({ userId, boardId, taskId }) {
+        const tasks = await Task.find({ userId, boardId }, null, { sort: { position: 1 } })
+        const task = tasks.find(el => String(el._id) === taskId)
+        const currentPosition = task.position;
+        tasks.forEach(el => {
+            if (el.position > currentPosition) el.position -= 1
+            el.markModified("tasks")
+            el.save()
+        })
+        await Task.findByIdAndDelete(taskId)
         return
     }
 
-    async updatePosition(taskId, position) {
-        await Task.findByIdAndUpdate(taskId, {position}, {new: true})
+    async updatePosition({ userId, boardId, taskId, position }) {
+        const tasks = await Task.find({ userId, boardId }, null, { sort: { position: 1 } })
+        const task = tasks.find(el => String(el._id) === taskId)
+        const currentPosition = task.position;
+
+        if (currentPosition < position) { //перемещаем вниз
+            tasks.forEach(el => {
+                if (el.position === currentPosition) {
+                    el.position = position;
+                }
+                if (el.position > currentPosition && el.position <= position && String(el._id) !== taskId) {
+                    el.position -= 1;
+                }
+                el.markModified("tasks")
+                el.save()
+            })
+        }
+
+        if (currentPosition > position) {//перемещаем вверх
+            tasks.forEach(el => {
+                if (el.position === currentPosition) {
+                    el.position = position;
+                }
+                if (el.position >= position && el.position < currentPosition && String(el._id) !== taskId) {
+                    el.position += 1;
+                }
+                el.markModified("tasks")
+                el.save()
+            })
+        }
         return
     }
 }

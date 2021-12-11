@@ -37,13 +37,6 @@ const updateTask = async (req, res, next) => {
         message: "no task found"
       })
     }
-    if (req.body.position) {
-      const tasks = await TaskService.getUserTasks(req.user.id)
-      const task = tasks.find(el => el._id === id)
-      tasks.splice(task.position, 1)
-      tasks.splice(position, 0, task)
-      tasks.save()
-    }
     return res.status(http.UPDATED).json({
       status: http.UPDATED,
       code: http.UPDATED,
@@ -56,8 +49,8 @@ const updateTask = async (req, res, next) => {
 const updateTaskBoard = async (req, res, next) => {
   try {
     await taskValidation.changeTaskBoardScheme.validateAsync(req.body)
-    const {boardId, taskId} = req.body
-    const updatedTask = await TaskService.updateTaskBoard(taskId, boardId)
+    const {boardId, taskId, position} = req.body
+    const updatedTask = await TaskService.updateTaskBoard(taskId, boardId, position)
     if (!updatedTask) {
       return res.status(http.NOT_FOUND).json({
         status: "error",
@@ -76,8 +69,13 @@ const updateTaskBoard = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   try {
-    const {taskId} = req.body
-    await TaskService.deleteTask(taskId)
+    const {id} = req.params
+    const { boardId } = req.body
+    await TaskService.deleteTask({
+      userId: req.user.id,
+      boardId,
+      taskId: id
+    })
     return res.status(http.DELETED).json({
       status: http.DELETED,
       code: http.DELETED,
@@ -87,9 +85,36 @@ const deleteTask = async (req, res, next) => {
   }
 }
 
+const updateTaskPosition = async (req, res, next) => {
+  const { id } = req.params
+  const { position, boardId } = req.body
+  if (!id || !position || !boardId) {
+    return res.status(http.BAD_REQUEST).json({
+      status: "error",
+      code: http.BAD_REQUEST,
+      message: "no position found"
+    })
+  }
+  try {
+    await TaskService.updatePosition({
+      userId: req.user.id,
+      boardId,
+      taskId: id,
+      position,
+    })
+    return res.status(http.UPDATED).json({
+      status: "success",
+      code: http.UPDATED,
+    })
+  } catch (e) {
+    next(e)
+  }
+} 
+
 module.exports = {
   addTask,
   updateTask,
   updateTaskBoard,
   deleteTask,
+  updateTaskPosition,
 }

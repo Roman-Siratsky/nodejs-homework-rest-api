@@ -5,6 +5,7 @@ const createTaskScheme = Joi.object({
   description: Joi.string().required(),
   priority: Joi.string().required(),
   boardId: Joi.string().required(),
+  position: Joi.number().required(),
 })
 
 const updateTaskScheme = Joi.object({
@@ -17,6 +18,7 @@ const updateTaskScheme = Joi.object({
 const changeTaskBoardScheme = Joi.object({
   boardId: Joi.string().required(),
   taskId: Joi.string().required(),
+  position: Joi.number().required(),
 })
 
 module.exports = {
