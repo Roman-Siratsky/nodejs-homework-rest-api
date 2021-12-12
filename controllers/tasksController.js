@@ -97,8 +97,8 @@ const updateTaskPosition = async (req, res, next) => {
       taskId: id,
       position,
     })
-    const userTasks = await TaskService.getUserTasks(req.user.id)
     const boards = await BoardsService.getAll()
+    const userTasks = await TaskService.getUserTasks(req.user.id)
     const boardsWithTasks = boards.map(board => {
       board.items = userTasks.filter(task =>
         JSON.stringify(task.boardId) === JSON.stringify(board._id)
