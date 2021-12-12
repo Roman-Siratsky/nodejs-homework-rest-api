@@ -21,8 +21,14 @@ const changeTaskBoardScheme = Joi.object({
   position: Joi.number().required(),
 })
 
+const changeTaskPosScheme = Joi.object({
+  boardId: Joi.string().required(),
+  position: Joi.number().required(),
+})
+
 module.exports = {
   createTaskScheme,
   updateTaskScheme,
   changeTaskBoardScheme,
+  changeTaskPosScheme,
 }

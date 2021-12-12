@@ -2,6 +2,7 @@
 const http = require("../helpers/status.js")
 const taskValidation = require("../helpers/tasks_validation")
 const TaskService = require("../services/tasksService")
+const BoardsService = require("../services/boardsService")
 
 const addTask = async (req, res, next) => {
   try {
@@ -87,14 +88,8 @@ const deleteTask = async (req, res, next) => {
 
 const updateTaskPosition = async (req, res, next) => {
   const { id } = req.params
+  await taskValidation.changeTaskPosScheme.validateAsync(req.body)
   const { position, boardId } = req.body
-  if (!id || !position || !boardId) {
-    return res.status(http.BAD_REQUEST).json({
-      status: "error",
-      code: http.BAD_REQUEST,
-      message: "no position found"
-    })
-  }
   try {
     await TaskService.updatePosition({
       userId: req.user.id,
@@ -102,9 +97,18 @@ const updateTaskPosition = async (req, res, next) => {
       taskId: id,
       position,
     })
-    return res.status(http.UPDATED).json({
+    const userTasks = await TaskService.getUserTasks(req.user.id)
+    const boards = await BoardsService.getAll()
+    const boardsWithTasks = boards.map(board => {
+      board.items = userTasks.filter(task =>
+        JSON.stringify(task.boardId) === JSON.stringify(board._id)
+      ).sort((a, b) => a.position - b.position)
+      return board
+    })
+    return res.status(http.OK).json({
       status: "success",
-      code: http.UPDATED,
+      code: http.OK,
+      items: boardsWithTasks,
     })
   } catch (e) {
     next(e)

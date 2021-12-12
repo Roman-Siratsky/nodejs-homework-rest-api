@@ -51,12 +51,15 @@ class TasksService {
         const currentPosition = task.position;
 
         if (currentPosition < position) { //перемещаем вниз
+            console.log("FIRST IF");
             tasks.forEach(el => {
                 if (el.position === currentPosition) {
                     el.position = position;
+                    console.log("CURRENT FIRST EL", el);
                 }
                 if (el.position > currentPosition && el.position <= position && String(el._id) !== taskId) {
                     el.position -= 1;
+                    console.log("OTHER FIRST EL", el);
                 }
                 el.markModified("tasks")
                 el.save()
@@ -64,12 +67,15 @@ class TasksService {
         }
 
         if (currentPosition > position) {//перемещаем вверх
+            console.log("SECOND IF");
             tasks.forEach(el => {
                 if (el.position === currentPosition) {
                     el.position = position;
+                    console.log("CURRENT SECOND EL", el);
                 }
                 if (el.position >= position && el.position < currentPosition && String(el._id) !== taskId) {
                     el.position += 1;
+                    console.log("OTHER SECOND EL", el);
                 }
                 el.markModified("tasks")
                 el.save()
