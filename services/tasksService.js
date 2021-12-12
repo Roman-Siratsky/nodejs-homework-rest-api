@@ -33,8 +33,8 @@ class TasksService {
     }
 
     async deleteTask({ userId, boardId, taskId }) {
-        const tasks = await Task.find({ userId, boardId })
-        const task = tasks.find(el => String(el._id) === taskId)
+        const task = await Task.findById(taskId)
+        const tasks = await Task.find({ userId, boardId: task.boardId })
         const currentPosition = task.position;
         tasks.forEach(el => {
             if (el.position > currentPosition) el.position -= 1
