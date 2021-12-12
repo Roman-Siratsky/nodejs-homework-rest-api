@@ -46,10 +46,6 @@ const updateTask = async (req, res, next) => {
       code: http.OK,
       items: boardsWithTasks,
     })
-    // return res.status(http.UPDATED).json({
-    //   status: http.UPDATED,
-    //   code: http.UPDATED,
-    // })
   } catch (e) {
     next(e)
   }
@@ -58,8 +54,8 @@ const updateTask = async (req, res, next) => {
 const updateTaskBoard = async (req, res, next) => {
   try {
     await taskValidation.changeTaskBoardScheme.validateAsync(req.body)
-    const {boardId, taskId, position} = req.body
-    const updatedTask = await TaskService.updateTaskBoard(taskId, boardId, position)
+    const {boardId, taskId, position, prevBoardId} = req.body
+    const updatedTask = await TaskService.updateTaskBoard({taskId, boardId, position, prevBoardId, userId: req.user.id})
     if (!updatedTask) {
       return res.status(http.NOT_FOUND).json({
         status: "error",
@@ -73,10 +69,6 @@ const updateTaskBoard = async (req, res, next) => {
       code: http.OK,
       items: boardsWithTasks,
     })
-    // return res.status(http.UPDATED).json({
-    //   status: http.UPDATED,
-    //   code: http.UPDATED,
-    // })
   } catch (e) {
     next(e)
   }
@@ -97,10 +89,6 @@ const deleteTask = async (req, res, next) => {
       code: http.OK,
       items: boardsWithTasks,
     })
-    // return res.status(http.DELETED).json({
-    //   status: http.DELETED,
-    //   code: http.DELETED,
-    // })
   } catch (e) {
     next(e)
   }

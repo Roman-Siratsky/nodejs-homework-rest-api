@@ -19,6 +19,7 @@ const changeTaskBoardScheme = Joi.object({
   boardId: Joi.string().required(),
   taskId: Joi.string().required(),
   position: Joi.number().required(),
+  prevBoardId: Joi.string().required()
 })
 
 const changeTaskPosScheme = Joi.object({

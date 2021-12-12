@@ -17,8 +17,16 @@ class TasksService {
         return updatedTask
     }
 
-    async updateTaskBoard(taskId, boardId, position) {
+    async updateTaskBoard({ taskId, boardId, position, prevBoardId, userId }) {
+        const task = await Task.findById(taskId)
+        const currentPosition = task.position;
         const updatedTask = await Task.findByIdAndUpdate(taskId, { boardId, position }, { new: true })
+        const tasks = await Task.find({ userId, boardId: prevBoardId })
+        tasks.forEach(async (el) => {
+            if (el.position > currentPosition) el.position -= 1
+            await el.markModified("tasks")
+            await el.save()
+        })
         return updatedTask
     }
 
@@ -36,10 +44,10 @@ class TasksService {
         const task = await Task.findById(taskId)
         const tasks = await Task.find({ userId, boardId: task.boardId })
         const currentPosition = task.position;
-        tasks.forEach(el => {
+        tasks.forEach(async (el) => {
             if (el.position > currentPosition) el.position -= 1
-            el.markModified("tasks")
-            el.save()
+            await el.markModified("tasks")
+            await el.save()
         })
         await Task.findByIdAndDelete(taskId)
         return
