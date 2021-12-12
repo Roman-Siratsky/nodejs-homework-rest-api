@@ -52,7 +52,7 @@ class TasksService {
 
         if (currentPosition < position) { //перемещаем вниз
             console.log("FIRST IF");
-            tasks.forEach(el => {
+            tasks.forEach(async (el) => {
                 if (el.position === currentPosition) {
                     el.position = position;
                     console.log("CURRENT FIRST EL", el);
@@ -68,7 +68,7 @@ class TasksService {
 
         if (currentPosition > position) {//перемещаем вверх
             console.log("SECOND IF");
-            tasks.forEach(el => {
+            tasks.forEach(async (el) => {
                 if (el.position === currentPosition) {
                     el.position = position;
                     console.log("CURRENT SECOND EL", el);
