@@ -62,7 +62,7 @@ class TasksService {
                     console.log("OTHER FIRST EL", el);
                 }
                 el.markModified("tasks")
-                el.save()
+                await el.save()
             })
         }
 
@@ -78,7 +78,7 @@ class TasksService {
                     console.log("OTHER SECOND EL", el);
                 }
                 el.markModified("tasks")
-                el.save()
+                await el.save()
             })
         }
         return
