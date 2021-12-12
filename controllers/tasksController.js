@@ -10,9 +10,11 @@ const addTask = async (req, res, next) => {
     const newTask = req.body;
     newTask.userId = req.user.id;
     await TaskService.create(newTask)
-    return res.status(http.CREATED).json({
-      status: http.CREATED,
-      code: http.CREATED,
+    const boardsWithTasks = await BoardsService.getBoardsWithTasks(req.user.id)
+    return res.status(http.OK).json({
+      status: "success",
+      code: http.OK,
+      items: boardsWithTasks,
     })
   } catch (e) {
     next(e)
@@ -38,10 +40,16 @@ const updateTask = async (req, res, next) => {
         message: "no task found"
       })
     }
-    return res.status(http.UPDATED).json({
-      status: http.UPDATED,
-      code: http.UPDATED,
+    const boardsWithTasks = await BoardsService.getBoardsWithTasks(req.user.id)
+    return res.status(http.OK).json({
+      status: "success",
+      code: http.OK,
+      items: boardsWithTasks,
     })
+    // return res.status(http.UPDATED).json({
+    //   status: http.UPDATED,
+    //   code: http.UPDATED,
+    // })
   } catch (e) {
     next(e)
   }
@@ -59,10 +67,16 @@ const updateTaskBoard = async (req, res, next) => {
         message: "no task found"
       })
     }
-    return res.status(http.UPDATED).json({
-      status: http.UPDATED,
-      code: http.UPDATED,
+    const boardsWithTasks = await BoardsService.getBoardsWithTasks(req.user.id)
+    return res.status(http.OK).json({
+      status: "success",
+      code: http.OK,
+      items: boardsWithTasks,
     })
+    // return res.status(http.UPDATED).json({
+    //   status: http.UPDATED,
+    //   code: http.UPDATED,
+    // })
   } catch (e) {
     next(e)
   }
@@ -77,10 +91,16 @@ const deleteTask = async (req, res, next) => {
       boardId,
       taskId: id
     })
-    return res.status(http.DELETED).json({
-      status: http.DELETED,
-      code: http.DELETED,
+    const boardsWithTasks = await BoardsService.getBoardsWithTasks(req.user.id)
+    return res.status(http.OK).json({
+      status: "success",
+      code: http.OK,
+      items: boardsWithTasks,
     })
+    // return res.status(http.DELETED).json({
+    //   status: http.DELETED,
+    //   code: http.DELETED,
+    // })
   } catch (e) {
     next(e)
   }
@@ -97,14 +117,7 @@ const updateTaskPosition = async (req, res, next) => {
       taskId: id,
       position,
     })
-    const boards = await BoardsService.getAll()
-    const userTasks = await TaskService.getUserTasks(req.user.id)
-    const boardsWithTasks = boards.map(board => {
-      board.items = userTasks.filter(task =>
-        JSON.stringify(task.boardId) === JSON.stringify(board._id)
-      ).sort((a, b) => a.position - b.position)
-      return board
-    })
+    const boardsWithTasks = await BoardsService.getBoardsWithTasks(req.user.id)
     return res.status(http.OK).json({
       status: "success",
       code: http.OK,

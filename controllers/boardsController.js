@@ -4,6 +4,7 @@ const TaskService = require("../services/tasksService")
 
 const listBoards = async (req, res, next) => {
   try {
+    
     const userTasks = await TaskService.getUserTasks(req.user.id)
     const boards = await BoardsService.getAll()
     const boardsWithTasks = boards.map(board => {
